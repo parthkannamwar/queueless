@@ -123,10 +123,6 @@ button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,inpu
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><h3 id="modalTitle">A quick note</h3><p id="modalText"></p><div class="modal-actions"><button class="outline-btn" onclick="closeModal()">Got it</button><button class="primary-btn" id="modalAction" onclick="closeModal()">Okay</button></div></div></div>
-
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-  
 <script>
 /*
  QueueLess frontend prototype.
@@ -134,21 +130,7 @@ button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,inpu
  FIREBASE: add your web config and enable the integration after we set secure database rules.
  Do not treat client-side credits, anonymous auth, or reports as fraud-proof.
 */
-const firebaseConfig = {
-  apiKey: "AIzaSyBSRjoCcxMdG9_Tyi-SFS0f-bSVLof9_1g",
-  authDomain: "queueless-9043e.firebaseapp.com",
-  databaseURL: "https://queueless-9043e-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "queueless-9043e",
-  storageBucket: "queueless-9043e.firebasestorage.app",
-  messagingSenderId: "104734409852",
-  appId: "1:104734409852:web:473292e88fb412ce1f75f9"
-};
-  let db = null;
-
-if (FIREBASE_CONFIG) {
-  firebase.initializeApp(FIREBASE_CONFIG);
-  db = firebase.database();
-}// Firebase web config goes here after database rules are ready.
+const FIREBASE_CONFIG = null; // Firebase web config goes here after database rules are ready.
 const STORAGE_KEY = "queueless-v2-preview";
 const USER_KEY = "queueless-demo-user";
 const userId = getOrCreateUser();
@@ -156,32 +138,7 @@ function getOrCreateUser(){let id=localStorage.getItem(USER_KEY);if(!id){id=(cry
 function initialState(){return {credits:0,creditHistory:[],reports:[],cycles:{"110":{number:1,status:"open",nextQueue:1,bookings:[]}, "117":{number:1,status:"open",nextQueue:1,bookings:[]}},rides:[],rideRequests:[],walk:{active:false,steps:0,creditedMilestones:0,startedAt:null}}}
 function loadState(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(s&&s.cycles&&s.rides)return Object.assign(initialState(),s)}catch(e){}return initialState()}
 let state=loadState();let stepBaseline=null,lastStepAt=0,toastTimer=null;let motionHandler=null;
-function save(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  renderAll();
-
-  if (db) {
-    db.ref("queueless/state").set(state)
-      .catch(error => {
-        console.error("Firebase save failed:", error);
-        toast("Could not sync data to the server.");
-      });
-  }
-}
-  if (db) {
-  db.ref("queueless/state").on("value", snapshot => {
-    const data = snapshot.val();
-
-    if (data) {
-      state = data;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      renderAll();
-    }
-  }, error => {
-    console.error("Firebase read failed:", error);
-    toast("Could not load shared data.");
-  });
-}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAll()}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2800)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function timeAgo(ts){const sec=Math.max(0,Math.floor((Date.now()-ts)/1000));if(sec<60)return "just now";if(sec<3600)return Math.floor(sec/60)+"m ago";return Math.floor(sec/3600)+"h ago"}
