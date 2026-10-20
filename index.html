@@ -125,14 +125,14 @@ button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,inpu
 <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><h3 id="modalTitle">A quick note</h3><p id="modalText"></p><div class="modal-actions"><button class="outline-btn" onclick="closeModal()">Got it</button><button class="primary-btn" id="modalAction" onclick="closeModal()">Okay</button></div></div></div>
 <script>
 /*
- QueueLess frontend prototype.
+ EcoMove frontend prototype.
  LOCAL MODE: persists demo data in this browser only.
  FIREBASE: add your web config and enable the integration after we set secure database rules.
  Do not treat client-side credits, anonymous auth, or reports as fraud-proof.
 */
 const FIREBASE_CONFIG = null; // Firebase web config goes here after database rules are ready.
-const STORAGE_KEY = "queueless-v2-preview";
-const USER_KEY = "queueless-demo-user";
+const STORAGE_KEY = "EcoMove-v2-preview";
+const USER_KEY = "EcoMove-demo-user";
 const userId = getOrCreateUser();
 function getOrCreateUser(){let id=localStorage.getItem(USER_KEY);if(!id){id=(crypto.randomUUID?crypto.randomUUID():"u"+Date.now()+Math.random().toString(36).slice(2));localStorage.setItem(USER_KEY,id)}return id}
 function initialState(){return {credits:0,creditHistory:[],reports:[],cycles:{"110":{number:1,status:"open",nextQueue:1,bookings:[]}, "117":{number:1,status:"open",nextQueue:1,bookings:[]}},rides:[],rideRequests:[],walk:{active:false,steps:0,creditedMilestones:0,startedAt:null}}}
